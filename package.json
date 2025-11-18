@@ -1,5 +1,5 @@
 {
-  "name": "p66-project",
+  "name": "book-tracker",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -15,6 +15,7 @@
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.1.1",
     "react-router": "^7.9.5",
+    "react-router-dom": "^7.9.6",
     "router": "^2.2.0"
   },
   "devDependencies": {

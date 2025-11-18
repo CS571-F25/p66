@@ -1,16 +1,15 @@
-# React + Vite
+# Book Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Book Tracker is an in-progress React/Vite site that helps readers track books they plan to read, have in progress, or already finished. The goal for this milestone was to stand up a working prototype that demonstrates the architectural pieces listed in the assignment brief without building every advanced feature yet.
 
-Currently, two official plugins are available:
+## Currently Implemented
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+| Requirement | Status |
+| --- | --- |
+| Hosted React project with routing | React 19 + Vite + React Router 7 via `HashRouter` |
+| React Bootstrap usage | Navbar, cards, grids, forms, and buttons |
+| Navigation bar | Persistent top nav linking Home, Library, About |
+| ≥ 3 routed pages | Home (hero + Open Library search), Library (status filters), About (milestone summary) |
+| ≥ 5 meaningful components | `NavigationBar`, `HeroBanner`, `BookSearch`, `Library`, `LibraryBook`, plus page components |
+| Open Library integration | Home search widget calls `https://openlibrary.org/search.json` |
+| Book organization | Sample library data with status toggles + review snippet placeholder |
