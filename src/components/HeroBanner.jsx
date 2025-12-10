@@ -6,14 +6,14 @@ const highlights = [
   'Log a quick reaction with a 1–5 star rating summary'
 ]
 
-export default function HeroBanner({ stats }) {
+export default function HeroBanner({ stats, profile }) {
   return (
     <Card className="hero-card shadow-sm mb-4">
       <Card.Body>
         <Row className="align-items-center g-4">
           <Col lg={7}>
             <Badge bg="primary" className="mb-3">
-              Currently Building
+              Welcome back, {profile?.name || 'reader'}
             </Badge>
             <h1 className="mb-3">Keep tabs on your reading life</h1>
             <p className="lead text-muted">

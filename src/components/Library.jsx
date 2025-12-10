@@ -1,23 +1,22 @@
 import { useMemo, useState } from 'react'
-import { Alert, Button, ButtonGroup, Col, Row } from 'react-bootstrap'
+import { Alert, Col, Row } from 'react-bootstrap'
+import FilterBar from './FilterBar'
 import LibraryBook from './LibraryBook'
 
-const filters = [
-  { label: 'All', value: 'all' },
-  { label: 'TBR', value: 'tbr' },
-  { label: 'In progress', value: 'in-progress' },
-  { label: 'Completed', value: 'completed' }
-]
-
-export default function Library({ library, onUpdateStatus }) {
+export default function Library({ library, onUpdateStatus, onAddReview }) {
   const [filter, setFilter] = useState('all')
+  const [showReviewedOnly, setShowReviewedOnly] = useState(false)
 
   const visible = useMemo(() => {
-    if (filter === 'all') {
-      return library
+    let filtered = library
+    if (filter !== 'all') {
+      filtered = filtered.filter((book) => book.status === filter)
     }
-    return library.filter((book) => book.status === filter)
-  }, [library, filter])
+    if (showReviewedOnly) {
+      filtered = filtered.filter((book) => book.reviews.length > 0)
+    }
+    return filtered
+  }, [library, filter, showReviewedOnly])
 
   return (
     <section className="py-4">
@@ -25,28 +24,23 @@ export default function Library({ library, onUpdateStatus }) {
         <p className="eyebrow text-uppercase small mb-1">Your saved books</p>
         <h1 className="mb-2">Library</h1>
         <p className="text-muted mb-0">
-          This simple view keeps track of each title plus its reading status and any review snippets you have
-          started during the prototype phase.
+          Track each title plus its reading status, reviews, and ratings. Filter by status or show only books that
+          have feedback.
         </p>
       </header>
-      <ButtonGroup className="mb-3 flex-wrap">
-        {filters.map((item) => (
-          <Button
-            key={item.value}
-            variant={filter === item.value ? 'primary' : 'outline-secondary'}
-            onClick={() => setFilter(item.value)}
-          >
-            {item.label}
-          </Button>
-        ))}
-      </ButtonGroup>
+      <FilterBar
+        filter={filter}
+        onChangeFilter={setFilter}
+        showReviewedOnly={showReviewedOnly}
+        onToggleReviewed={setShowReviewedOnly}
+      />
       {visible.length === 0 ? (
         <Alert variant="info">No books match that filter yet.</Alert>
       ) : (
         <Row className="g-3">
           {visible.map((book) => (
             <Col md={6} key={book.id}>
-              <LibraryBook book={book} onUpdate={onUpdateStatus} />
+              <LibraryBook book={book} onUpdate={onUpdateStatus} onAddReview={onAddReview} />
             </Col>
           ))}
         </Row>

@@ -1,7 +1,7 @@
 import { Container, Nav, Navbar } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 
-export default function NavigationBar() {
+export default function NavigationBar({ profileName = 'Reader' }) {
   return (
     <Navbar bg="light" expand="lg" className="shadow-sm">
       <Container>
@@ -17,10 +17,11 @@ export default function NavigationBar() {
             <Nav.Link as={NavLink} to="/library">
               Library
             </Nav.Link>
-            <Nav.Link as={NavLink} to="/about">
-              About
+            <Nav.Link as={NavLink} to="/account">
+              Account
             </Nav.Link>
           </Nav>
+          <Navbar.Text className="ms-lg-3 text-muted small">Signed in as {profileName}</Navbar.Text>
         </Navbar.Collapse>
       </Container>
     </Navbar>

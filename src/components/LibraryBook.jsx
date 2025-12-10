@@ -1,4 +1,8 @@
-import { Badge, Card, Dropdown } from 'react-bootstrap'
+import { useMemo, useState } from 'react'
+import { Button, Card, Dropdown, Stack } from 'react-bootstrap'
+import ReviewForm from './ReviewForm'
+import ReviewList from './ReviewList'
+import StatusBadge from './StatusBadge'
 
 const statusLabels = {
   tbr: 'To be read',
@@ -6,36 +10,54 @@ const statusLabels = {
   completed: 'Completed'
 }
 
-export default function LibraryBook({ book, onUpdate }) {
+export default function LibraryBook({ book, onUpdate, onAddReview }) {
+  const [showReviews, setShowReviews] = useState(false)
+
+  const averageRating = useMemo(() => {
+    if (!book.reviews.length) return null
+    const total = book.reviews.reduce((sum, review) => sum + review.rating, 0)
+    return (total / book.reviews.length).toFixed(1)
+  }, [book.reviews])
+
   return (
     <Card className="h-100 shadow-sm">
-      <Card.Body className="d-flex flex-column gap-2">
+      <Card.Body className="d-flex flex-column gap-3">
         <div className="d-flex justify-content-between align-items-start">
           <div>
             <Card.Title className="mb-1">{book.title}</Card.Title>
             <Card.Subtitle className="text-muted small">{book.author}</Card.Subtitle>
+            <p className="text-muted small mb-0">Pages: {book.pages ?? 'n/a'}</p>
           </div>
-          <Badge bg="secondary">{statusLabels[book.status]}</Badge>
+          <StatusBadge status={book.status} />
         </div>
-        <p className="text-muted small mb-1">Pages: {book.pages ?? 'n/a'}</p>
-        <p className="text-muted small mb-3">Reviews: {book.reviews.length}</p>
-        <Dropdown>
-          <Dropdown.Toggle size="sm" variant="outline-primary">
-            Update status
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            {Object.entries(statusLabels).map(([value, label]) => (
-              <Dropdown.Item key={value} active={book.status === value} onClick={() => onUpdate(book.id, value)}>
-                {label}
-              </Dropdown.Item>
-            ))}
-          </Dropdown.Menu>
-        </Dropdown>
-        {book.reviews.length > 0 && (
-          <blockquote className="blockquote small text-muted mb-0">
-            “{book.reviews[0].text}” — {book.reviews[0].reviewer}, {book.reviews[0].rating}★
-          </blockquote>
-        )}
+        <Stack direction="horizontal" className="flex-wrap gap-2 align-items-center">
+          <Dropdown>
+            <Dropdown.Toggle size="sm" variant="outline-primary">
+              Update status
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              {Object.entries(statusLabels).map(([value, label]) => (
+                <Dropdown.Item key={value} active={book.status === value} onClick={() => onUpdate(book.id, value)}>
+                  {label}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
+          <p className="text-muted small mb-0">Reviews: {book.reviews.length}</p>
+          <p className="text-muted small mb-0">
+            Average rating: {averageRating ? `${averageRating}★` : '—'}
+          </p>
+          <Button
+            size="sm"
+            variant="outline-secondary"
+            aria-expanded={showReviews}
+            onClick={() => setShowReviews((value) => !value)}
+          >
+            {showReviews ? 'Hide reviews' : 'Show reviews'}
+          </Button>
+        </Stack>
+        {showReviews && <ReviewList reviews={book.reviews} />}
+        <ReviewForm onSubmit={(review) => onAddReview(book.id, review)} />
       </Card.Body>
     </Card>
   )

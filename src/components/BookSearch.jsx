@@ -55,11 +55,16 @@ export default function BookSearch({ onAddBook }) {
             <p className="text-muted mb-0">Find a title, then add it to your personal queue.</p>
           </div>
           <Form onSubmit={handleSubmit}>
+            <Form.Label className="visually-hidden" htmlFor="search-input">
+              Search for a book
+            </Form.Label>
             <InputGroup className="mb-3">
               <Form.Control
+                id="search-input"
                 placeholder="Search by title, author, or ISBN"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                aria-describedby="search-help"
               />
               <Button type="submit" disabled={loading}>
                 {loading ? (
@@ -71,8 +76,12 @@ export default function BookSearch({ onAddBook }) {
                 )}
               </Button>
             </InputGroup>
+            <Form.Text id="search-help" className="text-muted">
+              Powered by Open Library. Results show top 6 matches.
+            </Form.Text>
           </Form>
           {error && <Alert variant="danger">{error}</Alert>}
+          {!loading && results.length === 0 && <Alert variant="secondary">No results yet. Try a new search term.</Alert>}
           <Row className="g-3">
             {results.map((book) => (
               <Col md={4} key={book.id}>
