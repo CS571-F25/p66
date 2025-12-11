@@ -2,19 +2,24 @@ import { useState } from 'react'
 import { Button, Form, Stack } from 'react-bootstrap'
 
 export default function ReviewForm({ onSubmit }) {
-  const [rating, setRating] = useState(4)
+  const [rating, setRating] = useState(null)
   const [text, setText] = useState('')
+  const [error, setError] = useState('')
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    if (!text.trim()) return
+    if (!rating) {
+      setError('Select a rating to save your review.')
+      return
+    }
+    setError('')
     onSubmit({
       reviewer: 'You',
       rating,
       text: text.trim()
     })
     setText('')
-    setRating(4)
+    setRating(null)
   }
 
   return (
@@ -49,9 +54,13 @@ export default function ReviewForm({ onSubmit }) {
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="What stood out about this book?"
-            required
           />
         </Form.Group>
+        {error && (
+          <div className="text-danger small" role="alert">
+            {error}
+          </div>
+        )}
         <Button type="submit" variant="primary">
           Save review
         </Button>

@@ -15,7 +15,7 @@ export default function ReviewList({ reviews }) {
               {review.rating}★
             </span>
           </p>
-          <p className="mb-0 small text-muted">{review.text}</p>
+          <p className="mb-0 small text-muted">{review.text || 'No comment provided.'}</p>
         </ListGroup.Item>
       ))}
     </ListGroup>
