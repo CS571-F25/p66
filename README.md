@@ -5,7 +5,7 @@ Book Tracker is a React/Vite site that helps readers track the books they plan t
 ## Features
 
 - Home: Open Library search with labeled inputs and accessible controls; stats strip; yearly goal and streak widget.
-- Library: Status + “has review” filters, inline status updater, expandable review section, average rating display, and review form.
+- Library: Status + “has review” filters, inline status updater, expandable review section, average rating display, review form, and remove-from-library control.
 - Account: Local “login” storing display name/email plus library persistence in `localStorage`.
 - Design: Consistent React Bootstrap components (Navbar, Cards, ButtonGroups, Progress, Forms) with focus-visible styles and AA-friendly palette.
 - Accessibility: No skipped headings, labeled form controls, alt-less layout (no images), keyboard-friendly forms/switches.

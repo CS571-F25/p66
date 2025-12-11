@@ -3,7 +3,7 @@ import { Alert, Col, Row } from 'react-bootstrap'
 import FilterBar from './FilterBar'
 import LibraryBook from './LibraryBook'
 
-export default function Library({ library, onUpdateStatus, onAddReview }) {
+export default function Library({ library, onUpdateStatus, onAddReview, onRemove }) {
   const [filter, setFilter] = useState('all')
   const [showReviewedOnly, setShowReviewedOnly] = useState(false)
 
@@ -40,7 +40,7 @@ export default function Library({ library, onUpdateStatus, onAddReview }) {
         <Row className="g-3">
           {visible.map((book) => (
             <Col md={6} key={book.id}>
-              <LibraryBook book={book} onUpdate={onUpdateStatus} onAddReview={onAddReview} />
+              <LibraryBook book={book} onUpdate={onUpdateStatus} onAddReview={onAddReview} onRemove={onRemove} />
             </Col>
           ))}
         </Row>

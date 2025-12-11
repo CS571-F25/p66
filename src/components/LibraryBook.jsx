@@ -10,7 +10,7 @@ const statusLabels = {
   completed: 'Completed'
 }
 
-export default function LibraryBook({ book, onUpdate, onAddReview }) {
+export default function LibraryBook({ book, onUpdate, onAddReview, onRemove }) {
   const [showReviews, setShowReviews] = useState(false)
 
   const averageRating = useMemo(() => {
@@ -47,6 +47,19 @@ export default function LibraryBook({ book, onUpdate, onAddReview }) {
           <p className="text-muted small mb-0">
             Average rating: {averageRating ? `${averageRating}★` : '—'}
           </p>
+          <Button
+            size="sm"
+            variant="outline-danger"
+            onClick={() => {
+              const confirmed = window.confirm(`Remove "${book.title}" from your library?`)
+              if (confirmed) {
+                onRemove(book.id)
+              }
+            }}
+            aria-label={`Remove ${book.title} from library`}
+          >
+            Remove
+          </Button>
           <Button
             size="sm"
             variant="outline-secondary"

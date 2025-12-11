@@ -111,6 +111,10 @@ function App() {
     )
   }
 
+  const removeBookFromLibrary = (bookId) => {
+    setLibrary((current) => current.filter((book) => book.id !== bookId))
+  }
+
   const stats = useMemo(() => {
     return library.reduce(
       (acc, book) => {
@@ -171,6 +175,7 @@ function App() {
                     library={library}
                     onUpdateStatus={updateBookStatus}
                     onAddReview={addReviewToBook}
+                    onRemove={removeBookFromLibrary}
                   />
                 }
               />
