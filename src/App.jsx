@@ -99,15 +99,23 @@ function App() {
 
   const updateBookStatus = (bookId, status) => {
     setLibrary((current) =>
-      current.map((book) => (book.id === bookId ? { ...book, status } : book))
+      current.map((book) => {
+        if (book.id !== bookId) return book
+        const next = { ...book, status }
+        if (status !== 'completed') {
+          next.reviews = []
+        }
+        return next
+      })
     )
   }
 
   const addReviewToBook = (bookId, review) => {
     setLibrary((current) =>
-      current.map((book) =>
-        book.id === bookId ? { ...book, reviews: [...book.reviews, { ...review, reviewer: profile.name }] } : book
-      )
+      current.map((book) => {
+        if (book.id !== bookId || book.status !== 'completed') return book
+        return { ...book, reviews: [...book.reviews, { ...review, reviewer: profile.name }] }
+      })
     )
   }
 

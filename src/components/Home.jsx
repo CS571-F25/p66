@@ -38,9 +38,13 @@ export default function Home({ stats, library, onAddBook, goal, onUpdateGoal, pr
                     <Card.Subtitle className="text-muted small">{book.author}</Card.Subtitle>
                     <div className="d-flex align-items-center gap-2 mt-3">
                       <StatusBadge status={book.status} />
-                      <span className="text-muted small">
-                        {book.reviews.length > 0 ? `${book.reviews.length} review(s)` : 'No reviews yet'}
-                      </span>
+                      {book.status === 'completed' ? (
+                        <span className="text-muted small">
+                          {book.reviews.length > 0 ? `${book.reviews.length} review(s)` : 'No reviews yet'}
+                        </span>
+                      ) : (
+                        <span className="text-muted small">Reviews unlock after completion</span>
+                      )}
                     </div>
                   </Card.Body>
                 </Card>

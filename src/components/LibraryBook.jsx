@@ -19,6 +19,8 @@ export default function LibraryBook({ book, onUpdate, onAddReview, onRemove }) {
     return (total / book.reviews.length).toFixed(1)
   }, [book.reviews])
 
+  const canReview = book.status === 'completed'
+
   return (
     <Card className="h-100 shadow-sm">
       <Card.Body className="d-flex flex-column gap-3">
@@ -43,9 +45,9 @@ export default function LibraryBook({ book, onUpdate, onAddReview, onRemove }) {
               ))}
             </Dropdown.Menu>
           </Dropdown>
-          <p className="text-muted small mb-0">Reviews: {book.reviews.length}</p>
+          <p className="text-muted small mb-0">Reviews: {canReview ? book.reviews.length : 'Not yet'}</p>
           <p className="text-muted small mb-0">
-            Average rating: {averageRating ? `${averageRating}★` : '—'}
+            Average rating: {canReview && averageRating ? `${averageRating}★` : '—'}
           </p>
           <Button
             size="sm"
@@ -60,17 +62,25 @@ export default function LibraryBook({ book, onUpdate, onAddReview, onRemove }) {
           >
             Remove
           </Button>
-          <Button
-            size="sm"
-            variant="outline-secondary"
-            aria-expanded={showReviews}
-            onClick={() => setShowReviews((value) => !value)}
-          >
-            {showReviews ? 'Hide reviews' : 'Show reviews'}
-          </Button>
+          {canReview && (
+            <Button
+              size="sm"
+              variant="outline-secondary"
+              aria-expanded={showReviews}
+              onClick={() => setShowReviews((value) => !value)}
+            >
+              {showReviews ? 'Hide reviews' : 'Show reviews'}
+            </Button>
+          )}
         </Stack>
-        {showReviews && <ReviewList reviews={book.reviews} />}
-        <ReviewForm onSubmit={(review) => onAddReview(book.id, review)} />
+        {canReview ? (
+          <>
+            {showReviews && <ReviewList reviews={book.reviews} />}
+            <ReviewForm onSubmit={(review) => onAddReview(book.id, review)} />
+          </>
+        ) : (
+          <p className="text-muted small mb-0">Mark this book as completed to log and view reviews.</p>
+        )}
       </Card.Body>
     </Card>
   )
