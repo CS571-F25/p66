@@ -1,24 +1,29 @@
 import { useEffect, useState } from 'react'
-import { Alert, Button, Card, Col, Form, InputGroup, Row, Spinner } from 'react-bootstrap'
+import { Alert, Button, Card, Col, Form, InputGroup, Pagination, Row, Spinner } from 'react-bootstrap'
 
 const DEFAULT_QUERY = 'productivity'
+const RESULTS_PER_PAGE = 6
 
 export default function BookSearch({ onAddBook }) {
   const [query, setQuery] = useState(DEFAULT_QUERY)
   const [results, setResults] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
 
   useEffect(() => {
     searchBooks(DEFAULT_QUERY)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const searchBooks = async (term) => {
+  const searchBooks = async (term, pageNumber = 1) => {
     setLoading(true)
     setError('')
     try {
-      const response = await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(term)}&limit=6`)
+      const response = await fetch(
+        `https://openlibrary.org/search.json?q=${encodeURIComponent(term)}&limit=${RESULTS_PER_PAGE}&page=${pageNumber}`
+      )
       if (!response.ok) {
         throw new Error('Open Library search failed.')
       }
@@ -31,6 +36,9 @@ export default function BookSearch({ onAddBook }) {
         year: doc.first_publish_year ?? 'n/a'
       }))
       setResults(mapped)
+      const computedPages = Math.max(1, Math.ceil((data.numFound || RESULTS_PER_PAGE) / RESULTS_PER_PAGE))
+      setTotalPages(computedPages)
+      setPage(pageNumber)
     } catch (err) {
       setError(err.message || 'Unable to search right now.')
     } finally {
@@ -43,7 +51,20 @@ export default function BookSearch({ onAddBook }) {
     if (!query.trim()) {
       return
     }
-    searchBooks(query.trim())
+    searchBooks(query.trim(), 1)
+  }
+
+  const pageNumbers = () => {
+    const maxVisible = 5
+    let start = Math.max(1, page - 2)
+    let end = Math.min(totalPages, start + maxVisible - 1)
+    start = Math.max(1, end - maxVisible + 1)
+
+    const pages = []
+    for (let i = start; i <= end; i += 1) {
+      pages.push(i)
+    }
+    return pages
   }
 
   return (
@@ -106,6 +127,33 @@ export default function BookSearch({ onAddBook }) {
               </Col>
             ))}
           </Row>
+          {totalPages > 1 && (
+            <div className="d-flex align-items-center justify-content-between mt-3">
+              <p className="small text-muted mb-0">
+                Page {page} of {totalPages}
+              </p>
+              <Pagination className="mb-0" aria-label="Search results pagination">
+                <Pagination.Prev disabled={page === 1} onClick={() => searchBooks(query, page - 1)}>
+                  Previous
+                </Pagination.Prev>
+                {pageNumbers().map((pageNumber) => (
+                  <Pagination.Item
+                    key={pageNumber}
+                    active={pageNumber === page}
+                    onClick={() => searchBooks(query, pageNumber)}
+                  >
+                    {pageNumber}
+                  </Pagination.Item>
+                ))}
+                <Pagination.Next
+                  disabled={page === totalPages}
+                  onClick={() => searchBooks(query, page + 1)}
+                >
+                  Next
+                </Pagination.Next>
+              </Pagination>
+            </div>
+          )}
         </Card.Body>
       </Card>
     </section>
